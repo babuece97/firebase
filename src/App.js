@@ -12,6 +12,7 @@ function App() {
   .then(result => {
     const {displayName, photoURL, email}= result.user;
     console.log(displayName, photoURL, email);
+    // Google Auth is done
 
   })
 }
