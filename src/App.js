@@ -46,12 +46,19 @@ const handleSignOut = () => {
    email:'',
    }
    setUser (signedOutUser);
-   console.log(res);
+   
 
  })
  .catch (errr => {
 
- })
+ });
+}
+
+const handleChange = (event) => {
+console.log(event.target.name, event.target.value);
+}
+const handleSubmit = () => {
+
 }
 
   return (
@@ -68,8 +75,18 @@ const handleSignOut = () => {
         <img src={user.photo} alt=""/> 
         </div>
       }
+
+    <h1>Our Authentication System</h1>
+    <form onSubmit= {handleSubmit}> 
+    <input type="text" name="Email" onChange={handleChange} placeholder="Write your emailID" required/>
+    <br/>
+    <input type="password" name="password" onChange = {handleChange} placeholder="your pwd" required/>
+    <br/>
+    <input type="submit" value="Submitt"/>
+    </form>
       
     </div>
+    
   );
 }
 
