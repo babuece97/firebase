@@ -78,9 +78,9 @@ const handleSubmit = () => {
 
     <h1>Our Authentication System</h1>
     <form onSubmit= {handleSubmit}> 
-    <input type="text" name="Email" onChange={handleChange} placeholder="Write your emailID" required/>
+    <input type="text" name="Email" onBlur={handleChange} placeholder="Write your emailID" required/>
     <br/>
-    <input type="password" name="password" onChange = {handleChange} placeholder="your pwd" required/>
+    <input type="password" name="password" onBlur = {handleChange} placeholder="your pwd" required/>
     <br/>
     <input type="submit" value="Submitt"/>
     </form>
