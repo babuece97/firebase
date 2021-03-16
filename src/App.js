@@ -56,7 +56,7 @@ const handleSignOut = () => {
 
 const handleBlur = (e) => {
 console.log(e.target.name, e.target.value);
-if (e.target.name === 'email'){
+if (e.target.name === 'Email'){
   const isEmailValid = /\S+@\S+\.\S+/.test(e.target.value);
   console.log(isEmailValid)
 
