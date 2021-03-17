@@ -12,7 +12,8 @@ function App() {
     name:'',
     email:'',
     photo:'',
-    password:''
+    password:'',
+    error:''
   })
 
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -45,6 +46,7 @@ const handleSignOut = () => {
    name :'',
    phto:'',
    email:'',
+   success: false
    }
    setUser (signedOutUser);
    
@@ -55,28 +57,49 @@ const handleSignOut = () => {
  });
 }
 
-const handleBlur = (e) => {
-  debugger;
-let isFormValid = true;   
+const handleBlur = (e) => {    
+let isFieldValid = true;   
 if (e.target.name === 'email'){
-   isFormValid = /\S+@\S+\.\S+/.test(e.target.value); 
+   isFieldValid = /\S+@\S+\.\S+/.test(e.target.value); 
 }
 
 if (e.target.name === 'password'){
   const isPasswordValid = e.target.value.length>6;
   const passwordHasNumber = /\d{1}/.test(e.target.value);
-  isFormValid = isPasswordValid && passwordHasNumber;
+  isFieldValid = isPasswordValid && passwordHasNumber;
 
  } 
- if(isFormValid){
+ if(isFieldValid){
    const newUserInfo = {...user};
    newUserInfo[e.target.name] = e.target.value;  
    setUser(newUserInfo);
 
  }
 }
-const handleSubmit = () => {
+const handleSubmit = (e) => {
+  //console.log(user.email, user.password)
+  if(user.email && user.password) {
+    firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+  .then(res => {
+    const newUserInfo = {...user};
+    newUserInfo.error = '';
+    newUserInfo.success = true;
+    setUser(newUserInfo);
+    // Signed in 
+   // var user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const newUserInfo = {...user};
+    newUserInfo.error = error.message;
+    newUserInfo.success = false;
+    setUser(newUserInfo);
+    
+    // ..
+  });
 
+  }
+  e.preventDefault();
 }
 
   return (
@@ -96,9 +119,7 @@ const handleSubmit = () => {
       }
 
     <h1>Our Authentication System</h1>
-    <p>User Namee:{user.name}</p>
-    <p>Emaill:{user.email}</p>
-    <p>Passwprdd:{user.password}</p>
+    
     <form onSubmit= {handleSubmit}> 
     
   
@@ -110,7 +131,9 @@ const handleSubmit = () => {
     <br/>
     <input type="submit" value="Submitt"/>
     </form>
-      
+      <p style={{color:'red'}}>{user.error }</p>
+
+      {user.success && <p style={{color:'green'}}>User Created SuccessfullYY</p>}
     </div>
     
   );
