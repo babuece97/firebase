@@ -7,8 +7,10 @@ import firebaseConfig from './FirebaseConfig';
 firebase.initializeApp(firebaseConfig);
 
 function App() {
+  const [newUser, setNewUser] = useState(false);
   const [user, setUser] = useState({
     isSignedIn:false,
+    newUser : false,
     name:'',
     email:'',
     photo:'',
@@ -46,6 +48,7 @@ const handleSignOut = () => {
    name :'',
    phto:'',
    email:'',
+   error:'',
    success: false
    }
    setUser (signedOutUser);
@@ -78,7 +81,7 @@ if (e.target.name === 'password'){
 }
 const handleSubmit = (e) => {
   //console.log(user.email, user.password)
-  if(user.email && user.password) {
+  if(newUser && user.email && user.password) {
     firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
   .then(res => {
     const newUserInfo = {...user};
@@ -89,15 +92,28 @@ const handleSubmit = (e) => {
    // var user = userCredential.user;
     // ...
   })
-  .catch((error) => {
+  .catch(error => {
     const newUserInfo = {...user};
     newUserInfo.error = error.message;
     newUserInfo.success = false;
     setUser(newUserInfo);
-    
-    // ..
   });
 
+  }
+  if(!newUser && user.email && user.password){
+    firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+    .then(res => {
+    const newUserInfo = {...user};
+    newUserInfo.error = '';
+    newUserInfo.success = true;
+    setUser(newUserInfo);
+    })
+    .catch(function (error) {
+    const newUserInfo = {...user};
+    newUserInfo.error = error.message;
+    newUserInfo.success = false;
+    setUser(newUserInfo);
+    });  
   }
   e.preventDefault();
 }
@@ -119,11 +135,11 @@ const handleSubmit = (e) => {
       }
 
     <h1>Our Authentication System</h1>
-    
-    <form onSubmit= {handleSubmit}> 
-    
-  
-    <input name="name" type="text" onBlur={handleBlur} placeholder="YOUR name"/> 
+    <input type="checkBox" onChange = {()=> setNewUser(!newUser)} name="newUser" id =""/>
+    <label htmlFor="newUser">New Registration</label>
+    <form onSubmit= {handleSubmit}>
+      {newUser && 
+    <input name="name" type="text" onBlur={handleBlur} placeholder="YOUR name"/> }
     <br/>
     <input type="text" name="email" onBlur={handleBlur} placeholder="Write your emailID" required/>
     <br/>
@@ -133,7 +149,7 @@ const handleSubmit = (e) => {
     </form>
       <p style={{color:'red'}}>{user.error }</p>
 
-      {user.success && <p style={{color:'green'}}>User Created SuccessfullYY</p>}
+      {user.success && <p style={{color:'green'}}>User {newUser?'Created': 'Loggeg Indd'} Successfullyy</p>} 
     </div>
     
   );
